@@ -2,6 +2,11 @@ import org.jsoup.Jsoup;                     //imports
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.*;
+
+import java.util.Scanner;
+
 
 public class Skroutz {
 
@@ -9,7 +14,11 @@ public class Skroutz {
         /*
             Skroutz url to scrape
          */
-        final String url = "https://www.skroutz.gr/c/40/kinhta-thlefwna/m/15053/Xiaomi.html?from=latest_keyphrases&keyphrase=redmi+note+8&o=xiaomi+redmi+note+8&order_by=pricevat";
+        final String url = "https://www.skroutz.gr/";
+
+        WebDriver driver = new ChromeDriver();                  //Open Browser.
+        driver.get(url);
+
         /*
             Try block
          */
@@ -19,10 +28,21 @@ public class Skroutz {
             String search = "span.search-bar-input-wrapper input[value]";       //Trying to modify the search bar in order to search for the user query
             Elements searcher = page.select(search);                        //Capture the HTML value.
             System.out.println(searcher.size());                            //Prints the size we get from our elements we read.
+            Scanner in = new Scanner(System.in);
+            System.out.print("Search for: ");                   //Ask user what he wants to search for.
+            String user = in.nextLine();
 
-            for(Element e:searcher) {
-                System.out.println(e.attr("value"));            //Prints the context that user search for.
-            }
+            Thread.sleep(2000);     //wait
+
+            driver.findElement(By.cssSelector(search)).sendKeys(user);          //modify search bar with the user choice
+
+            Thread.sleep(2000);     //wait
+
+            driver.findElement(By.cssSelector(search)).submit();                        //submit
+
+
+
+
 
 
         }
