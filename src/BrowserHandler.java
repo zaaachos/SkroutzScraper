@@ -79,19 +79,20 @@ public class BrowserHandler {
             page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
             Element product_link = page.select(list).first();           //Get the first element of the list, which is the cheapest product.
 
-            System.out.println("\n\n" + main);
+
 
             Thread.sleep(1000);     //wait
 
             driver.findElement(By.cssSelector(list)).click();               //click on the cheapest product url.
 
             main.setUrl(driver.getCurrentUrl());                //Set the url as the cheapest product link.
+            System.out.println("\n\n" + main);
+            String info = "main.scrollable div.prices.js-prices.section.content ol.list.sku-list.blp-enabled li.cf.card.js-product-card";                //Get Shop Info.
 
+            page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
+            Element shop_info = page.select(info).first();           //Get the first element of the list, which is the cheapest product.
 
-
-
-
-
+            System.out.println(shop_info.toString());
 
 
 
