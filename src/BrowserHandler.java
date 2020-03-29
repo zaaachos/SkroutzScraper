@@ -87,7 +87,7 @@ public class BrowserHandler {
 
             main.setUrl(driver.getCurrentUrl());                //Set the url as the cheapest product link.
 
-            
+
 
 
 
