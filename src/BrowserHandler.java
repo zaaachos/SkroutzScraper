@@ -4,9 +4,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 
+import javax.xml.stream.events.EndElement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -47,8 +51,8 @@ public class BrowserHandler {
     /*
         Getter to get our details about our cheapest product we find. ( price, seller, shop location etc.)
      */
-    public ArrayList<String> getDetails(){
-        ArrayList<String> details = new ArrayList<String>();        //Initialize a Set with the details of the cheapest product we get from Skroutz.
+    public HashMap<String, String> getDetails(){
+        HashMap<String, String> details = new HashMap<String, String>();        //Initialize a Set with the details of the cheapest product we get from Skroutz.
 
         /*
             Try block
@@ -61,11 +65,11 @@ public class BrowserHandler {
             driver.get(main.getUrl());
 
 
-            Thread.sleep(1000);     //wait
+            Thread.sleep(500);     //wait
 
             driver.findElement(By.cssSelector(search)).sendKeys(this.getUser());          //modify search bar with the user choice
 
-            Thread.sleep(1000);     //wait
+            Thread.sleep(500);     //wait
 
             driver.findElement(By.cssSelector(search)).submit();                        //submit
 
@@ -81,7 +85,7 @@ public class BrowserHandler {
 
 
 
-            Thread.sleep(1000);     //wait
+            Thread.sleep(500);     //wait
 
             driver.findElement(By.cssSelector(list)).click();               //click on the cheapest product url.
 
@@ -92,9 +96,48 @@ public class BrowserHandler {
             page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
             Element shop_info = page.select(info).first();           //Get the first element of the list, which is the cheapest product.
 
-            System.out.println(shop_info.toString());
+
+            String shop_name = info + " div.shop.cf div.shop-name";         //get the name of the shop
+            Element name = page.selectFirst(shop_name);
+
+            details.put("ShopName",name.text());        //save tha shop name in details.
+
+            String product_name = info + " div.description div.item h3 a[title]";           //get the original name of the product.
+            String shop_website = info + " div.description div.item h3 a[href]";            //get the shop website.
+            Element prod_name = page.selectFirst(product_name);
+            Element shoplink = page.selectFirst(shop_website);
 
 
+            String seller = "https://www.skroutz.gr/" + shoplink.attr("href");              //save the website link.
+
+            details.put("ShopWebSite",seller);                          //store the shop website to details.
+
+
+            details.put("ProductName",prod_name.text());        //save the product name in details.
+
+            String availability = info + " div.description div.item p.availability span.availability";          //get product availability
+            Element avail = page.selectFirst(availability);
+
+            details.put("Availability",avail.text());       //save the availability in details.
+
+            String product_price = info + " div.price a";                   //get the product price.
+            Element price = page.selectFirst(product_price);
+
+            details.put("Price",price.text());                      //store the cheapest price we found.
+
+            Thread.sleep(500);     //wait
+
+
+            main.setUrl(seller);
+            driver.get(main.getUrl());
+
+
+
+
+
+            Thread.sleep(5000);     //wait
+
+            driver.close();         //close the browser.
 
 
 

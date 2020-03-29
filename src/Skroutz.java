@@ -15,7 +15,11 @@ public class Skroutz {
         System.out.print("Search for: ");
         String choice = in.nextLine();
         BrowserHandler user = new BrowserHandler(choice);
-        user.getDetails();
+        System.out.println("\n\n" + user.getDetails());
+
+
+
+
 
     }
 }
