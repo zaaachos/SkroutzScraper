@@ -77,17 +77,18 @@ public class BrowserHandler {
 
             System.out.println("New url: " +main);                  //Test if we catch the right link
 
-            String list = "main.content.cf div.wrapper section.main-content ol.list.cf.line.blp-enabled li.cf.card div.details h2 a";                       //Try to search for the product link with css attributes.
+            String list = "main.content.cf div.wrapper ol li.cf.card div h2 a";                       //Try to search for the product link with css attributes.
                                                                                                                                                         //This is the list with all results we got.
 
             page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
             Element product_link = page.select(list).first();           //Get the first element of the list, which is the cheapest product.
 
-
+            System.out.println(product_link.attr("href"));
 
             Thread.sleep(500);     //wait
 
-            driver.findElement(By.cssSelector(list)).click();               //click on the cheapest product url.
+            main.setUrl("https://www.skroutz.gr/"+product_link.attr("href"));
+            driver.get(main.getUrl());
 
             main.setUrl(driver.getCurrentUrl());                //Set the url as the cheapest product link.
             System.out.println("\n\n" + main);
