@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
 import javax.xml.stream.events.EndElement;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -61,7 +62,7 @@ public class BrowserHandler {
             Document page = Jsoup.connect(main.getUrl()).get();     //Scrappe webpage
 
             String search = "span.search-bar-input-wrapper input[value]";       //Trying to modify the search bar in order to search for the user's choice
-            Elements searcher = page.select(search);                        //Capture the HTML value.
+            Element searcher = page.select(search).first();                        //Capture the HTML value.
             driver.get(main.getUrl());
 
 
@@ -77,25 +78,83 @@ public class BrowserHandler {
 
             System.out.println("New url: " +main);                  //Test if we catch the right link
 
+
             String list = "main.content.cf div.wrapper ol li.cf.card div h2 a";                       //Try to search for the product link with css attributes.
-                                                                                                                                                        //This is the list with all results we got.
+                                                                                                        //This is the list with all results we got.
 
             page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
             Element product_link = page.select(list).first();           //Get the first element of the list, which is the cheapest product.
 
-            System.out.println(product_link.attr("href"));
-
             Thread.sleep(500);     //wait
 
-            main.setUrl("https://www.skroutz.gr/"+product_link.attr("href"));
-            driver.get(main.getUrl());
+            /*
+                   Error - 404. Didn't find anything.
+             */
+            try{
+                driver.findElement(By.cssSelector("div.error-404.no-results"));
+                System.out.println("Error 404. I didn't find anything with query " + this.getUser());
+                return null;
+
+
+            }catch (Exception e){
+
+            }
+
+            /*
+                    Manufacturer page handler.
+             */
+            try {
+                driver.findElement(By.id("manufacturer_show"));
+                String popular_items = "ul.cf.list.tile.minisku.full li.card h2 a[href]";                   //Capture the most popular of the items in the popular items list.
+                Element popular = page.selectFirst(popular_items);
+
+                main.setUrl("https://www.skroutz.gr/"+popular.attr("href"));
+                driver.get(main.getUrl());
+
+            }catch (Exception e){
+
+            }
+
+            /*
+                    Other Cases of search.
+             */
+            try{
+                driver.findElement(By.id("search_search"));
+                String others = "ol.cf.list.tile.minisku.full li.card h2 a[href]";                   //Capture the most popular of the items in the popular items list.
+                Element other = page.selectFirst(others);
+
+                main.setUrl("https://www.skroutz.gr/"+other.attr("href"));
+                driver.get(main.getUrl());
+            }catch (Exception e){
+
+            }
+
+            /*
+                    Products page handler.
+             */
+            try{
+                driver.findElement(By.id("categories_show"));
+                main.setUrl("https://www.skroutz.gr/"+product_link.attr("href"));                       //Capture the cheapest of the products.
+                driver.get(main.getUrl());
+            }
+            catch (Exception e){
+
+            }
+
+
+
+            ////////////////////////////////////////////////////////   Now trying to get the details we want   ///////////////////////////////////////////////////////////////////////////////////
+
 
             main.setUrl(driver.getCurrentUrl());                //Set the url as the cheapest product link.
             System.out.println("\n\n" + main);
             String info = "main.scrollable div.prices.js-prices.section.content ol.list.sku-list.blp-enabled li.cf.card.js-product-card";                //Get Shop Info.
 
+
+
             page = Jsoup.connect(main.getUrl()).get();               //Now, our page watch at our new link.
             Element shop_info = page.select(info).first();           //Get the first element of the list, which is the cheapest product.
+
 
 
             String shop_name = info + " div.shop.cf div.shop-name";         //get the name of the shop
@@ -131,9 +190,6 @@ public class BrowserHandler {
 
             main.setUrl(seller);
             driver.get(main.getUrl());
-
-
-
 
 
             Thread.sleep(5000);     //wait
