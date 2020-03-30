@@ -76,8 +76,6 @@ public class BrowserHandler {
 
             main.setUrl(driver.getCurrentUrl());                //Get the new url.
 
-            System.out.println("New url: " +main);                  //Test if we catch the right link
-
 
             String list = "main.content.cf div.wrapper ol li.cf.card div h2 a";                       //Try to search for the product link with css attributes.
                                                                                                         //This is the list with all results we got.
@@ -160,7 +158,7 @@ public class BrowserHandler {
             String shop_name = info + " div.shop.cf div.shop-name";         //get the name of the shop
             Element name = page.selectFirst(shop_name);
 
-            details.put("ShopName",name.text());        //save tha shop name in details.
+            details.put("Shop Name",name.text());        //save tha shop name in details.
 
             String product_name = info + " div.description div.item h3 a[title]";           //get the original name of the product.
             String shop_website = info + " div.description div.item h3 a[href]";            //get the shop website.
@@ -170,10 +168,10 @@ public class BrowserHandler {
 
             String seller = "https://www.skroutz.gr/" + shoplink.attr("href");              //save the website link.
 
-            details.put("ShopWebSite",seller);                          //store the shop website to details.
+            details.put("Shop Website",seller);                          //store the shop website to details.
 
 
-            details.put("ProductName",prod_name.text());        //save the product name in details.
+            details.put("Product FullName",prod_name.text());        //save the product name in details.
 
             String availability = info + " div.description div.item p.availability span.availability";          //get product availability
             Element avail = page.selectFirst(availability);
@@ -185,11 +183,16 @@ public class BrowserHandler {
 
             details.put("Price",price.text());                      //store the cheapest price we found.
 
+            String extraCost1 = info + " div.price div div.price-content span.final-price a";
+            String final_price = driver.findElement(By.cssSelector(extraCost1)).getText();
+
+
+
             Thread.sleep(500);     //wait
 
 
-            main.setUrl(seller);
-            driver.get(main.getUrl());
+            //main.setUrl(seller);
+            //driver.get(main.getUrl());
 
 
             Thread.sleep(5000);     //wait
