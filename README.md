@@ -6,7 +6,7 @@
 
 * Example with SkroutzScraper.
 
-![SearchExample](https://github.com/zaaachos/SkroutzScraper/blob/master/Screenshot%20from%202020-04-02%2020-16-04.png)
+![SearchExample](https://github.com/zaaachos/SkroutzScraper/blob/master/Example%20Images/Screenshot%20from%202020-04-02%2020-16-04.png)
 
 
-![ResultsFromSearchExample](https://github.com/zaaachos/SkroutzScraper/blob/master/Screenshot%20from%202020-04-02%2020-16-14.png)
+![ResultsFromSearchExample](https://github.com/zaaachos/SkroutzScraper/blob/master/Example%20Images/Screenshot%20from%202020-04-02%2020-16-14.png)
